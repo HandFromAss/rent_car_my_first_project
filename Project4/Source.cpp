@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 void menu();
 void login();
 void signin();
@@ -24,8 +23,6 @@ void retern_car();
 void delete_admin();
 void showadmin();
 
-
-
 void showadmin() {
     sql::mysql::MySQL_Driver* driver;
     sql::Connection* con;
@@ -35,42 +32,29 @@ void showadmin() {
 
         con->setSchema("user");
 
-
-        
         string searchValue = "1";
-     
         string tableName = "people";
         string columnName = "admin";
 
-        
         string selectQuery = "SELECT * FROM " + tableName + " WHERE " + columnName + " = ?";
-
         
         sql::PreparedStatement* stmt;
         stmt = con->prepareStatement(selectQuery);
         stmt->setString(1, searchValue);
         sql::ResultSet* result = stmt->executeQuery();
 
-       
         while (result->next()) {
-            
-            std::string columnValue = result->getString(columnName);
+            string columnValue = result->getString(columnName);
             cout << "ID: " << result->getInt("id") << ", name: " << result->getString("name") << endl;
         }
-
-       
         delete result;
         delete stmt;
         delete con;
-
     }
     catch (sql::SQLException& e) {
     std::cout << "SQL Exception: " << e.what() << std::endl;
     }
-
 }
-
-
 
 void delete_admin() {
     sql::mysql::MySQL_Driver* driver;
@@ -85,17 +69,14 @@ void delete_admin() {
     cout << "Введите ID пользователя для выбора: ";
     cin >> idToSelect;
 
-   
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM people WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-   
     string newValue = "0";
     std::string tableName = "people";
     std::string columnName = "admin";
 
-    
     std::string updateQuery = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
     try {
         sql::PreparedStatement* stmt;
@@ -111,12 +92,9 @@ void delete_admin() {
     catch (sql::SQLException& e) {
         std::cout << "SQL Exception: " << e.what() << std::endl;
     }
-
-
     delete con;
     delete stmt;
 }
-
 
 void retern_car() {
     string avail = "";
@@ -134,7 +112,6 @@ void retern_car() {
     cin >> idToSelect;
     string updateQuery = "UPDATE car SET availability = ? WHERE id = ?";
 
-   
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement(updateQuery);
     stmt->setString(1, avail);
@@ -158,25 +135,18 @@ void rentcar() {
 
     con->setSchema("user");
     
-    
     string avail = "x";
     int idToSelect;
     cout << "Введите ID строки для выбора: ";
     cin >> idToSelect;
 
-  
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM car WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-    
     sql::ResultSet* res = stmt->executeQuery();
 
-    
     string columnName = "availability";
-
-    
-    
     try {
         string selectQuery = "SELECT " + columnName + " FROM car WHERE id = ?";
         sql::PreparedStatement* stmt;
@@ -202,7 +172,6 @@ void rentcar() {
                 else {
                     cout << "Строка с ID " << idToSelect << " не найдена." << endl;
                 }
-        
             }
             else {
                 cout << "Эта машина уже орендованна. \nВыберите машину без этого обозначентя 'x'" << endl;
@@ -214,19 +183,14 @@ void rentcar() {
         else {
             cout << "Запись с указанным ID не найдена." << endl;
         }
-             
     }
     catch (sql::SQLException& e) {
             cout << "SQL Exception: " << e.what() << endl;
     }
-        
-    // Освобождение ресурсов
     delete res;
     delete stmt;
     delete con;
-
 }
-
 
 void newadmin() {
     sql::mysql::MySQL_Driver* driver;
@@ -241,17 +205,13 @@ void newadmin() {
     cout << "Введите ID пользователя для выбора: ";
     cin >> idToSelect;
 
-  
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM people WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-   
     string newValue = "1";
     string tableName = "people";
     string columnName = "admin";
-
-    
     string updateQuery = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
     try {
         sql::PreparedStatement* stmt;
@@ -268,7 +228,6 @@ void newadmin() {
     catch (sql::SQLException& e) {
         cout << "SQL Exception: " << e.what() << std::endl;
     }
-
     delete con;
     delete stmt;
 }
@@ -303,8 +262,6 @@ void user() {
         user();
     }
 }
-
-
 
 void delcar() {
     showcar();
@@ -345,9 +302,7 @@ void delcar() {
     delete res;
     delete stmt;
     delete con;
-
 }
-
 
 void showcar() {
     sql::mysql::MySQL_Driver* driver;
@@ -361,10 +316,8 @@ void showcar() {
     sql::Statement* stmt;
     stmt = con->createStatement();
 
-
     sql::ResultSet* res;
     res = stmt->executeQuery("SELECT * FROM car");
-
     while (res->next()) {
         cout << "ID: " << res->getInt("id") << ", model: " << res->getString("model") << ", nomer: " << res->getInt("nomer") << ", day_money: " << res->getString("day_money") << "$" << ", availability: " << res->getString("availability") << endl;
     }
@@ -403,10 +356,7 @@ void newcar() {
     admin();
     delete con;
     delete stmt;
-
 }
-
-
 
 void admin() {
     int x;
@@ -481,7 +431,6 @@ void login(){
 
     con->setSchema("user");
 
-    
     string username, password;
     cout << "Введите имя пользователя: ";
     cin >> username;
@@ -493,7 +442,6 @@ void login(){
     stmt = con->createStatement();
     sql::ResultSet* res;
     res = stmt->executeQuery("SELECT * FROM people WHERE name = '" + username + "' AND password = '" + password + "'");
-
     try {
         string selectQuery = "SELECT " + columnName + " FROM people WHERE name = ? AND password = ?";
 
@@ -508,11 +456,8 @@ void login(){
                 cout << "Добро пожаловать " + username + "!" << endl;
                 sql::Statement* stmt;
                 stmt = con->createStatement();
-
-
                 sql::ResultSet* res;
                 res = stmt->executeQuery("SELECT * FROM people WHERE name = '" + username + "' AND password = '" + password + "'");
-
                 while (res->next()) {
                     cout << "Ваш id: " + res->getString("id");
                 }
