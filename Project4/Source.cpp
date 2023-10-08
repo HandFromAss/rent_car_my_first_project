@@ -36,29 +36,29 @@ void showadmin() {
         con->setSchema("user");
 
 
-        // Значение, по которому вы хотите выполнить выборку
+        
         string searchValue = "1";
-        // Название таблицы и колонки, в которой вы хотите искать
+     
         string tableName = "people";
         string columnName = "admin";
 
-        // SQL-запрос SELECT с условием WHERE
+        
         string selectQuery = "SELECT * FROM " + tableName + " WHERE " + columnName + " = ?";
 
-        // Создание объекта PreparedStatement и выполнение запроса
+        
         sql::PreparedStatement* stmt;
         stmt = con->prepareStatement(selectQuery);
         stmt->setString(1, searchValue);
         sql::ResultSet* result = stmt->executeQuery();
 
-        // Обработка результатов
+       
         while (result->next()) {
-            // Чтение данных из ResultSet
+            
             std::string columnValue = result->getString(columnName);
             cout << "ID: " << result->getInt("id") << ", name: " << result->getString("name") << endl;
         }
 
-        // Освобождение ресурсов
+       
         delete result;
         delete stmt;
         delete con;
@@ -82,20 +82,20 @@ void delete_admin() {
     con->setSchema("user");
     showadmin();
     int idToSelect;
-    cout << "Введите ID пользователя для выбора: ";
+    cout << "Р’РІРµРґРёС‚Рµ ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РІС‹Р±РѕСЂР°: ";
     cin >> idToSelect;
 
-    // Создание подготовленного запроса с параметром
+   
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM people WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-    // Выполнение запроса
+   
     string newValue = "0";
     std::string tableName = "people";
     std::string columnName = "admin";
 
-    // SQL-запрос UPDATE для обновления значения по ID
+    
     std::string updateQuery = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
     try {
         sql::PreparedStatement* stmt;
@@ -103,7 +103,7 @@ void delete_admin() {
         stmt->setString(1, newValue);
         stmt->setInt(2, idToSelect);
         stmt->executeUpdate();
-        cout << "Админ удалён";
+        cout << "РђРґРјРёРЅ СѓРґР°Р»С‘РЅ";
         Sleep(1500);
         system("cls");
         admin();
@@ -130,17 +130,17 @@ void retern_car() {
     con->setSchema("user");
     int idToSelect;
     
-    cout << "Введите ID арендованной машины: ";
+    cout << "Р’РІРµРґРёС‚Рµ ID Р°СЂРµРЅРґРѕРІР°РЅРЅРѕР№ РјР°С€РёРЅС‹: ";
     cin >> idToSelect;
     string updateQuery = "UPDATE car SET availability = ? WHERE id = ?";
 
-    // Создание объекта PreparedStatement и выполнение запроса
+   
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement(updateQuery);
     stmt->setString(1, avail);
     stmt->setInt(2, idToSelect);
     stmt->executeUpdate();
-    cout << "Спасибо за использование наших услуг" << endl;
+    cout << "РЎРїР°СЃРёР±Рѕ Р·Р° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РЅР°С€РёС… СѓСЃР»СѓРі" << endl;
     system("cls");
     user();
 
@@ -161,21 +161,21 @@ void rentcar() {
     
     string avail = "x";
     int idToSelect;
-    cout << "Введите ID строки для выбора: ";
+    cout << "Р’РІРµРґРёС‚Рµ ID СЃС‚СЂРѕРєРё РґР»СЏ РІС‹Р±РѕСЂР°: ";
     cin >> idToSelect;
 
-    // Создание подготовленного запроса с параметром
+  
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM car WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-    // Выполнение запроса
+    
     sql::ResultSet* res = stmt->executeQuery();
 
-    // ==================
+    
     string columnName = "availability";
 
-    // SQL-запрос SELECT для получения значения колонки по ID
+    
     
     try {
         string selectQuery = "SELECT " + columnName + " FROM car WHERE id = ?";
@@ -189,7 +189,7 @@ void rentcar() {
                 if (res->next()) {
                     cout << "ID: " << res->getInt("id") << ", model: " << res->getString("model") << ", nomer: " << res->getInt("nomer") << ", day_money: " << res->getString("day_money") << "$" << endl;
                     string updateQuery = "UPDATE car SET availability = ? WHERE id = ?";
-                    // Создание объекта PreparedStatement и выполнение запроса
+                   
                     sql::PreparedStatement* stmt;
                     stmt = con->prepareStatement(updateQuery);
                     stmt->setString(1, avail);
@@ -200,19 +200,19 @@ void rentcar() {
                     user();
                 }
                 else {
-                    cout << "Строка с ID " << idToSelect << " не найдена." << endl;
+                    cout << "РЎС‚СЂРѕРєР° СЃ ID " << idToSelect << " РЅРµ РЅР°Р№РґРµРЅР°." << endl;
                 }
         
             }
             else {
-                cout << "Эта машина уже орендованна. \nВыберите машину без этого обозначентя 'x'" << endl;
+                cout << "Р­С‚Р° РјР°С€РёРЅР° СѓР¶Рµ РѕСЂРµРЅРґРѕРІР°РЅРЅР°. \nР’С‹Р±РµСЂРёС‚Рµ РјР°С€РёРЅСѓ Р±РµР· СЌС‚РѕРіРѕ РѕР±РѕР·РЅР°С‡РµРЅС‚СЏ 'x'" << endl;
                 Sleep(3000);
                 system("cls");
                 rentcar();
             }
         }
         else {
-            cout << "Запись с указанным ID не найдена." << endl;
+            cout << "Р—Р°РїРёСЃСЊ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј ID РЅРµ РЅР°Р№РґРµРЅР°." << endl;
         }
              
     }
@@ -220,7 +220,7 @@ void rentcar() {
             cout << "SQL Exception: " << e.what() << endl;
     }
         
-    // Освобождение ресурсов
+    // РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ СЂРµСЃСѓСЂСЃРѕРІ
     delete res;
     delete stmt;
     delete con;
@@ -238,21 +238,21 @@ void newadmin() {
     con->setSchema("user");
     showadmin();
     int idToSelect;
-    cout << "Введите ID пользователя для выбора: ";
+    cout << "Р’РІРµРґРёС‚Рµ ID РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РґР»СЏ РІС‹Р±РѕСЂР°: ";
     cin >> idToSelect;
 
-    // Создание подготовленного запроса с параметром
+  
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM people WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-    // Выполнение запроса
+   
     string newValue = "1";
-    std::string tableName = "people";
-    std::string columnName = "admin";
+    string tableName = "people";
+    string columnName = "admin";
 
-    // SQL-запрос UPDATE для обновления значения по ID
-    std::string updateQuery = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
+    
+    string updateQuery = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
     try {
         sql::PreparedStatement* stmt;
         stmt = con->prepareStatement(updateQuery);
@@ -260,13 +260,13 @@ void newadmin() {
         stmt->setInt(2, idToSelect);
         stmt->executeUpdate();
         string idinstr = to_string(idToSelect);
-        cout << "Пользователь под id: " + idinstr + " добавлен в спмсок админов";
+        cout << "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРґ id: " + idinstr + " РґРѕР±Р°РІР»РµРЅ РІ СЃРїРјСЃРѕРє Р°РґРјРёРЅРѕРІ";
         Sleep(1500);
         system("cls");
         admin();
     }
     catch (sql::SQLException& e) {
-        std::cout << "SQL Exception: " << e.what() << std::endl;
+        cout << "SQL Exception: " << e.what() << std::endl;
     }
 
     delete con;
@@ -276,7 +276,7 @@ void newadmin() {
 void user() {
     int x;
     cout << "1. rent car" << endl;
-    cout << "2. вернуть автро" << endl;
+    cout << "2. РІРµСЂРЅСѓС‚СЊ Р°РІС‚СЂРѕ" << endl;
     cout << "3. menu" << endl;
     cout << "4. exit" << endl;
     cin >> x;
@@ -317,22 +317,18 @@ void delcar() {
     con->setSchema("user");
 
     int idToSelect;
-    cout << "Введите ID строки для выбора: ";
+    cout << "Р’РІРµРґРёС‚Рµ ID СЃС‚СЂРѕРєРё РґР»СЏ РІС‹Р±РѕСЂР°: ";
     cin >> idToSelect;
 
-    // Создание подготовленного запроса с параметром
     sql::PreparedStatement* stmt;
     stmt = con->prepareStatement("SELECT * FROM car WHERE id = ?");
     stmt->setInt(1, idToSelect);
 
-    // Выполнение запроса
     sql::ResultSet* res = stmt->executeQuery();
 
-    // Вывод данных
     if (res->next()) {
         string deleteQuery = "DELETE FROM car WHERE id = ?";
 
-        // Создание объекта PreparedStatement и выполнение запроса
         sql::PreparedStatement* stmt;
         stmt = con->prepareStatement(deleteQuery);
         stmt->setInt(1, idToSelect);
@@ -342,11 +338,10 @@ void delcar() {
         admin();
     }
     else {
-        cout << "Строка с ID " << idToSelect << " не найдена." << endl;
+        cout << "РЎС‚СЂРѕРєР° СЃ ID " << idToSelect << " РЅРµ РЅР°Р№РґРµРЅР°." << endl;
         admin();
     }
 
-    // Освобождение ресурсов
     delete res;
     delete stmt;
     delete con;
@@ -386,14 +381,14 @@ void newcar() {
     con = driver->connect("tcp://127.0.0.1:3308", "root", "root");
 
     con->setSchema("user");
-    // Регистрация новой машины
+    
     string model;
     int nomer, day_money;
-    cout << "Введите модель машины: ";
+    cout << "Р’РІРµРґРёС‚Рµ РјРѕРґРµР»СЊ РјР°С€РёРЅС‹: ";
     cin >> model;
-    cout << "Введите номер: ";
+    cout << "Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ: ";
     cin >> nomer;    
-    cout << "Введите оплату за день: ";
+    cout << "Р’РІРµРґРёС‚Рµ РѕРїР»Р°С‚Сѓ Р·Р° РґРµРЅСЊ: ";
     cin >> day_money;
 
     sql::PreparedStatement* stmt;
@@ -403,7 +398,7 @@ void newcar() {
     stmt->setInt(3, day_money);
     stmt->executeUpdate();
 
-    cout << "Машина добавлена!" << endl;
+    cout << "РњР°С€РёРЅР° РґРѕР±Р°РІР»РµРЅР°!" << endl;
     system("cls");
     admin();
     delete con;
@@ -457,7 +452,7 @@ void admin() {
         admin();
     }
 }
-//MENU
+
 void menu() {
     int x;
     cout << "1.Login" << endl;
@@ -486,11 +481,11 @@ void login(){
 
     con->setSchema("user");
 
-    // Вход пользователя
+    
     string username, password;
-    cout << "Введите имя пользователя: ";
+    cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: ";
     cin >> username;
-    cout << "Введите пароль: ";
+    cout << "Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ: ";
     cin >> password;
 
     string columnName = "admin";
@@ -510,7 +505,7 @@ void login(){
         if (res->next()) {
             string columnValue = res->getString(columnName);
             if (columnValue == "0") {
-                cout << "Добро пожаловать " + username + "!" << endl;
+                cout << "Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ " + username + "!" << endl;
                 sql::Statement* stmt;
                 stmt = con->createStatement();
 
@@ -519,7 +514,7 @@ void login(){
                 res = stmt->executeQuery("SELECT * FROM people WHERE name = '" + username + "' AND password = '" + password + "'");
 
                 while (res->next()) {
-                    cout << "Ваш id: " + res->getString("id");
+                    cout << "Р’Р°С€ id: " + res->getString("id");
                 }
                 Sleep(3000);
                 system("cls");
@@ -529,14 +524,14 @@ void login(){
                 user();
             }
             else if (columnValue == "1") {
-                cout << "Добро пожаловать " + username + "!" << endl;
+                cout << "Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ " + username + "!" << endl;
                 sql::Statement* stmt;
                 stmt = con->createStatement();
                 sql::ResultSet* res;
                 res = stmt->executeQuery("SELECT * FROM people WHERE name = '" + username + "' AND password = '" + password + "'");
 
                 while (res->next()) {
-                    cout << "Ваш id: " + res->getString("id");
+                    cout << "Р’Р°С€ id: " + res->getString("id");
                 }
                 delete stmt;
                 delete res;
@@ -547,7 +542,7 @@ void login(){
             }
         }
         else {
-            cout << "Ошибка входа. Проверьте имя пользователя и пароль." << endl;
+            cout << "РћС€РёР±РєР° РІС…РѕРґР°. РџСЂРѕРІРµСЂСЊС‚Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё РїР°СЂРѕР»СЊ." << endl;
             Sleep(3000);
             delete stmt;
             delete con;
@@ -571,11 +566,11 @@ void signin() {
     con = driver->connect("tcp://127.0.0.1:3308", "root", "root");
 
     con->setSchema("user");
-    // Регистрация нового пользователя
+
     string username, password, admin = "0";
-    cout << "Введите имя пользователя: ";
+    cout << "Р’РІРµРґРёС‚Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: ";
     cin >> username;
-    cout << "Введите пароль: ";
+    cout << "Р’РІРµРґРёС‚Рµ РїР°СЂРѕР»СЊ: ";
     cin >> password;
 
     sql::PreparedStatement* stmt;
@@ -585,12 +580,12 @@ void signin() {
     stmt->setString(3, admin);
     stmt->executeUpdate();
     if (password.length() >= 3) {
-        cout << "Регистрация успешна!" << endl;
+        cout << "Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓСЃРїРµС€РЅР°!" << endl;
         system("cls");
         menu();
     }
     else {
-        cout << "Пароль должен быть больше трёх символов" << endl;
+        cout << "РџР°СЂРѕР»СЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ С‚СЂС‘С… СЃРёРјРІРѕР»РѕРІ" << endl;
         Sleep(2000);
         system("cls");
         menu();
